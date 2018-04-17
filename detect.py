@@ -24,7 +24,7 @@ def arg_parse():
    
     parser.add_argument("--images", dest = 'images', help = 
                         "Image / Directory containing images to perform detection upon",
-                        default = "imgs", type = str)
+                        default = "black.png", type = str)
     parser.add_argument("--det", dest = 'det', help = 
                         "Image / Directory to store detections to",
                         default = "det", type = str)
@@ -111,6 +111,7 @@ if batch_size != 1:
                         len(im_batches))]))  for i in range(num_batches)]  
 
 write = 0
+output = torch.FloatTensor(1, 8)
 start_det_loop = time.time()
 for i, batch in enumerate(im_batches):
 #load the image 
