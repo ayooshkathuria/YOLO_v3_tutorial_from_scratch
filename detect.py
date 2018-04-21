@@ -118,6 +118,7 @@ for i, batch in enumerate(im_batches):
     start = time.time()
     if CUDA:
         batch = batch.cuda()
+        output = output.cuda()
 
     prediction = model(Variable(batch, volatile = True), CUDA)
 
