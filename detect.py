@@ -98,8 +98,6 @@ im_batches = list(map(prep_image, loaded_ims, [inp_dim for x in range(len(imlist
 im_dim_list = [(x.shape[1], x.shape[0]) for x in loaded_ims]
 im_dim_list = torch.FloatTensor(im_dim_list).repeat(1,2)
 
-if CUDA:
-    im_dim_list = im_dim_list.cuda()
 
 leftover = 0
 if (len(im_dim_list) % batch_size):
@@ -112,13 +110,18 @@ if batch_size != 1:
 
 write = 0
 output = torch.FloatTensor(1, 8)
+
+
+if CUDA:
+    im_dim_list = im_dim_list.cuda()
+    output = output.cuda()
+    
 start_det_loop = time.time()
 for i, batch in enumerate(im_batches):
 #load the image 
     start = time.time()
     if CUDA:
         batch = batch.cuda()
-        output = output.cuda()
 
     prediction = model(Variable(batch, volatile = True), CUDA)
 
