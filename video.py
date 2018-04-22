@@ -33,6 +33,7 @@ def arg_parse():
     parser.add_argument("--reso", dest = 'reso', help = 
                         "Input resolution of the network. Increase to increase accuracy. Decrease to increase speed",
                         default = "416", type = str)
+    parser.add_argument("--video", dest = "videofile", help = "Video file to     run detection on", default = "video.avi", type = str)
     
     return parser.parse_args()
     
@@ -88,7 +89,7 @@ def write(x, results):
 
 #Detection phase
 
-videofile = "video.avi" #or path to the video file. 
+videofile = args.videofile #or path to the video file. 
 
 cap = cv2.VideoCapture(videofile)  
 
