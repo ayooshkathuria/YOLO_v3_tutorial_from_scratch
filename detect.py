@@ -109,12 +109,10 @@ if batch_size != 1:
                         len(im_batches))]))  for i in range(num_batches)]  
 
 write = 0
-output = torch.FloatTensor(1, 8)
 
 
 if CUDA:
     im_dim_list = im_dim_list.cuda()
-    output = output.cuda()
     
 start_det_loop = time.time()
 for i, batch in enumerate(im_batches):
@@ -155,6 +153,11 @@ for i, batch in enumerate(im_batches):
 
     if CUDA:
         torch.cuda.synchronize()       
+try:
+    output
+except NameError:
+    print ("No detections were made")
+    exit()
 
 output_recast = time.time()
 output[:,1:5] = torch.clamp(output[:,1:5], 0.0, float(inp_dim))
