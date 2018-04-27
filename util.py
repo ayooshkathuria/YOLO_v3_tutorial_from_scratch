@@ -34,7 +34,7 @@ def bbox_iou(box1, box2):
     inter_rect_y2 =  torch.min(b1_y2, b2_y2)
     
     #Intersection area
-    inter_area = (inter_rect_x2 - inter_rect_x1 + 1)*(inter_rect_y2 - inter_rect_y1 + 1)
+    inter_area = np.maximum(inter_rect_x2 - inter_rect_x1 + 1,0)*np.maximum(inter_rect_y2 - inter_rect_y1 + 1, 0)
     
     #Union Area
     b1_area = (b1_x2 - b1_x1 + 1)*(b1_y2 - b1_y1 + 1)
@@ -107,6 +107,8 @@ def write_results(prediction, confidence, num_classes, nms_conf = 0.4):
     batch_size = prediction.size(0)
 
     write = False
+    
+
 
     for ind in range(batch_size):
         image_pred = prediction[ind]          #image Tensor
@@ -127,6 +129,9 @@ def write_results(prediction, confidence, num_classes, nms_conf = 0.4):
         
         if image_pred_.shape[0] == 0:
             continue       
+#        
+        print (image_pred_)
+#        assert False
   
         #Get the various classes detected in the image
         img_classes = unique(image_pred_[:,-1])  # -1 index holds the class index
