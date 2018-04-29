@@ -125,10 +125,24 @@ while cap.isOpened():
             if key & 0xFF == ord('q'):
                 break
             continue
-        output[:,1:5] = torch.clamp(output[:,1:5], 0.0, float(inp_dim))
+        
+        
+        
 
-        im_dim = im_dim.repeat(output.size(0), 1)/inp_dim
-        output[:,1:5] *= im_dim
+        im_dim = im_dim.repeat(output.size(0), 1)
+        scaling_factor = torch.min(416/im_dim,1)[0].view(-1,1)
+        
+        output[:,[1,3]] -= (inp_dim - scaling_factor*im_dim[:,0].view(-1,1))/2
+        output[:,[2,4]] -= (inp_dim - scaling_factor*im_dim[:,1].view(-1,1))/2
+        
+        output[:,1:5] /= scaling_factor
+
+        for i in range(output.shape[0]):
+            output[i, [1,3]] = torch.clamp(output[i, [1,3]], 0.0, im_dim[i,0])
+            output[i, [2,4]] = torch.clamp(output[i, [2,4]], 0.0, im_dim[i,1])
+    
+        
+        
 
         classes = load_classes('data/coco.names')
         colors = pkl.load(open("pallete", "rb"))
