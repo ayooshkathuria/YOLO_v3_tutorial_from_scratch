@@ -112,8 +112,9 @@ while cap.isOpened():
         if CUDA:
             im_dim = im_dim.cuda()
             img = img.cuda()
-
-        output = model(Variable(img, volatile = True), CUDA)
+        
+        with torch.no_grad():
+            output = model(Variable(img, volatile = True), CUDA)
         output = write_results(output, confidence, num_classes, nms_conf = nms_thesh)
 
 
